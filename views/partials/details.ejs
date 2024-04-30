@@ -1,0 +1,157 @@
+<style>
+  .inputForm {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-left: 10px;
+  }
+
+  .inputForm input {
+    margin-right: 5px;
+    margin-bottom: 5px;
+    padding: 8px;
+    margin: 8px;
+    border-radius: 5px;
+    font-size: 20px;
+    border-color: blue;
+
+  }
+
+  .recentOrders .cardHeader button {
+    position: relative;
+    font-size: 35px;
+    border-color: blue;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    padding: 8px;
+    margin: 8px;
+    border-radius: 5px;
+
+  } 
+  thead tr td .th {
+    font-size: 30px;
+  }
+</style>
+<div class="recentOrders">
+  <div class="cardHeader">
+    <h2>recent orders</h2>
+
+    <form class="inputForm" @onsubmit="deleteReservation">
+      <input type="email" name="delete-name" placeholder="email">
+      
+      <button class="btn" id="delete-btn" type="submit"><ion-icon name="trash-outline"></ion-icon></button>
+    </form>
+  
+</div>
+<table>
+  <thead>
+    <tr>
+      <td  class="th">
+        NAME
+      </td>
+      <td  class="th">
+         EMAIL 
+      </td>
+      <td  class="th">
+         ROOM NUMBER 
+      </td>
+      <td  class="th">
+        status
+      </td>
+      <td  class="th">
+         CAPACITY
+      </td>
+      <td  class="th">
+        MATERIEALS 
+      </td>
+      <td  class="th">
+        DATE DEBUT
+      </td>
+      <td class="th">
+         DATE FIN 
+      </td>
+    </tr>
+  </thead>
+  <tbody id="reservations-table">
+  </tbody>
+</table>
+</div>
+
+<script>
+  const form = document.querySelector('form')
+  const delete_name = document.querySelector('input[name="delete-name"]')
+  const display = document.querySelector('.error')
+
+  form.addEventListener('submit', async (e) => {
+  e.preventDefault()
+
+  try {
+    const res = await fetch('/api/auth/deleteReservation', {
+      method: 'delete',
+      body: JSON.stringify({ email: delete_name.value }),
+      headers: { 'Content-Type': 'application/json' }
+    })
+
+    if (!res.ok) {
+      const message = await res.text()
+      throw new Error(message)
+    }
+
+    const data = await res.json()
+
+    // Clear form fields
+    delete_name.value = ''
+
+    // Refresh the page
+    location.reload()
+
+  } catch (err) {
+    console.log(err.message)
+    display.textContent = err.message
+  }
+})
+
+  fetch('/api/auth/showreservation')
+    .then(response => response.json())
+    .then(data => {
+      const reservationsTable = document.getElementById('reservations-table');
+      data.forEach(reservation => {
+        const row = document.createElement('tr');
+
+        const nameCell = document.createElement('td');
+        nameCell.textContent = reservation.name + reservation.surname;
+
+        const emailCell = document.createElement('td');
+        emailCell.textContent = reservation.email;
+
+        const roomNumberCell = document.createElement('td');
+        roomNumberCell.textContent = reservation.roomNumber;
+
+        const traitmentCell = document.createElement('td');
+        traitmentCell.textContent = reservation.traitment;
+
+        const capacityCell = document.createElement('td');
+        capacityCell.textContent = reservation.numberOfPeople;
+
+        const materialsCell = document.createElement('td');
+        materialsCell.textContent = reservation.materials;
+
+        const startDateCell = document.createElement('td');
+        startDateCell.textContent = reservation.startDate;
+
+
+        const endDateCell = document.createElement('td');
+        endDateCell.textContent = reservation.endDate;
+
+        row.appendChild(nameCell);
+        row.appendChild(emailCell);
+        row.appendChild(roomNumberCell);
+        row.appendChild(traitmentCell);
+        row.appendChild(capacityCell);
+        row.appendChild(materialsCell);
+        row.appendChild(startDateCell);
+        row.appendChild(endDateCell);
+        reservationsTable.appendChild(row);
+      });
+    })
+    .catch(error => console.error(error));
+</script>

@@ -1,0 +1,30 @@
+
+<table id="users-table">
+
+  <thead>
+    <tr>
+      <th class="th">Username</th>
+      <th class="th">Role</th>
+    </tr>
+  </thead>
+  <tbody id="users"></tbody>
+</table>
+
+<script>
+  fetch('/api/auth/getUsers')
+    .then(response => response.json())
+    .then(data => {
+      const tbody = document.getElementById('users');
+      data.users.forEach(user => {
+        const tr = document.createElement('tr');
+        const tdUsername = document.createElement('td');
+        const tdRole = document.createElement('td');
+        tdUsername.textContent = user.username;
+        tdRole.textContent = user.role;
+        tr.appendChild(tdUsername);
+        tr.appendChild(tdRole);
+        tbody.appendChild(tr);
+      });
+    })
+    .catch(error => console.error(error));
+</script>

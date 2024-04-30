@@ -1,0 +1,67 @@
+ <%- include('../partials/adminhead') %>
+  <body>
+    <%- include('../partials/dashboard') %>
+    <div class="main">
+      <%- include('../partials/navbarA') %>
+       <div class="user">
+        <% var dynamicImagePath = '/imgs/salleR.jpeg'; %>
+            <img src="<%= dynamicImagePath %>" alt="img1">
+          </div>
+
+      </div>
+        <!-- -----cards------->
+        <div class="cardBox">
+          <%- include('../partials/admincard', { numbers:'1.2500', icon: '<ion-icon name="eye-outline"></ion-icon>',cardname:'daily views'}) %>
+          <%- include('../partials/admincard', { numbers:'500', icon: '<ion-icon name="cart-outline">',cardname:'sales'}) %>
+          <%- include('../partials/admincard', { numbers:'85', icon: '<ion-icon name="chatbox-ellipses-outline"></ion-icon>',cardname:'comments'}) %>
+          <%- include('../partials/admincard', { numbers:'$ 842', icon: ' <ion-icon name="cash-outline"></ion-icon>',cardname:'earnings'}) %>
+         
+        </div>
+        <!--- details----->
+       
+       <div  class="details">
+         <%- include('../partials/messages' ) %>
+       </div>
+  
+       
+
+
+
+        <div class="recentcus">
+
+            <div class="cardHeader">
+             <h2>recent customers</h2>
+            </div>
+            <table>
+              <%- include('../partials/customers' ) %>
+
+              
+            </table>
+
+          </div>
+        </div>
+      
+
+
+          </div>
+        </div>
+    </div>
+    <script>
+      let toggle = document.querySelector(".toggle");
+      let navigation = document.querySelector(".navigation");
+      let main = document.querySelector(".main");
+      let a_next = document.querySelector(".a_next");
+      let details = document.querySelector(".details");
+      toggle.onclick = function () {
+        navigation.classList.toggle("active");
+        main.classList.toggle("active");
+        
+      };
+    
+    </script>
+<!-- --------icons------- -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>  </script>
+  </body>
+</html>

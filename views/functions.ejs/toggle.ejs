@@ -1,0 +1,11 @@
+
+function toggleElements(toggleSelector, targetSelectors) {
+    const toggle = document.querySelector(toggleSelector);
+    const targets = targetSelectors.map(selector => document.querySelector(selector));
+  
+    toggle.onclick = function () {
+      targets.forEach(target => target.classList.toggle("active"));
+    };
+  }
+
+  module.exports = toggleElements;

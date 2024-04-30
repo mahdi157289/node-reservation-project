@@ -1,0 +1,136 @@
+<%- include('../partials/adminhead') %>
+
+  <body>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        let toggle = document.querySelector(".toggle");
+        let navigation = document.querySelector(".navigation");
+        let main = document.querySelector(".main");
+        let a_next = document.querySelector(".a_next");
+        let details = document.querySelector(".details");
+      
+        toggle.onclick = function () {
+          navigation.classList.toggle("active");
+          main.classList.toggle("active");
+        };
+      });
+      async function fetchSalles() {
+        console.log('Fetching salles...');
+        const res = await fetch('/api/auth/showsalles')
+        console.log('Response received:', res);
+        const data = await res.json()
+    
+        if (res.ok) {
+          return data;
+        } else {
+          console.log('Error:', data.message);
+          throw new Error(data.message);
+        }
+      }
+      window.fetchSalles = fetchSalles;
+    
+      async function fetchReservation() {
+        const res = await fetch('/api/auth/showreservation')
+        const data = await res.json()
+    
+      }
+      window.fetchReservation = fetchReservation;
+      async function main() {
+        try {
+          const sallesData = await fetchSalles();
+          const reservationData = await fetchReservation();
+    
+          reservationData.forEach(async reservation => {
+            const N = reservation.roomNumber ;
+            const existingReservation = sallesData.find(salle => salle.number === N);
+    
+            if (existingReservation) {
+              const startDate = new Date(reservation.startDate);
+              const endDate = new Date(reservation.endDate);
+              const numberOfDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+    
+              if (existingReservation) {
+                const priceByHour = existingReservation.pricebyhour;
+                const totalPrice = numberOfDays * priceByHour ; 
+    
+                console.log(`Room Number: ${reservation.roomNumber}`);
+                console.log(`Start Date: ${startDate}`);
+                console.log(`End Date: ${endDate}`);
+                console.log(`Number of Days: ${numberOfDays}`);
+                console.log(`Price per Day: ${priceByHour }`);
+                console.log(`Total Price: ${totalPrice}`);
+              } else {
+                console.log('Salle not found for the given roomNumber');
+              }
+            } else {
+              console.log('Reservation not found for the given roomNumber');
+            }
+          });
+        } catch (error) {
+          console.log('Error:', error.message);
+        }
+      }
+    
+      main();
+    </script>
+    <%- include('../partials/dashboard') %>
+      <div class="main">
+        <%- include('../partials/navbarA') %>
+          <div class="user">
+            <% var dynamicImagePath='/imgs/salleR.jpeg' ; %>
+              <img src="<%= dynamicImagePath %>" alt="img1">
+          </div>
+
+      </div>
+      <!-- -----cards------->
+      <div class="cardBox">
+        <%- include('../partials/admincard', { numbers:'1.2500', icon: '<ion-icon name="eye-outline"></ion-icon>'
+          ,cardname:'daily views'}) %>
+          <%- include('../partials/admincard', { numbers:'500', icon: '<ion-icon name="cart-outline">'
+            ,cardname:'sales'}) %>
+            <%- include('../partials/admincard', { numbers:'85',
+              icon: '<ion-icon name="chatbox-ellipses-outline"></ion-icon>' ,cardname:'comments'}) %>
+              <%- include('../partials/admincard', { numbers:'$ 842', icon: ' <ion-icon name="cash-outline"></ion-icon>'
+                ,cardname:'earnings'}) %>
+
+      </div>
+      <!--- details----->
+      <div class="details">
+        <%- include('../partials/salle_details' ) %>
+      </div>
+
+
+
+      
+
+      <div class="recentcus">
+
+        <div class="cardHeader">
+          <h2>recent customers</h2>
+          <form class="inputForm " @onsubmit="deleteCustomer">
+            <input type="text" id="customername" name="customername" placeholder="name" required>
+            <button type="submit">
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+          </form>
+        </div>
+      
+        <table>
+          <%- include('../partials/customers' ) %>
+
+
+        </table>
+
+      </div>
+
+      </div>
+      </div>
+      </div>
+      
+      <!-- --------icons------- -->
+      <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+      <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+      <script>  </script>
+  </body>
+
+  </html>

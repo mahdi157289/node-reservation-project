@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #0f4830;
+  }
+
+  .container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    color: #83870c;
+  }
+
+  form {
+    padding-top: 30px;
+    margin-bottom: 40px;
+  }
+
+  .form-label {
+    font-weight: bold;
+    color: #444;
+  }
+
+  .form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 1rem;
+    width: 100%;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+  }
+
+  .error {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 10px;
+  } </style>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3 mt-5 pt-3">
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <div id="error" class="alert alert-danger" style="display: none;"></div>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <p>Don't have an account? <a href="/register">Register</a></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        const form = document.querySelector('form')
+        const username = document.querySelector('#username')
+        const password = document.querySelector('#password')
+        const display = document.querySelector('.error')
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault()
+          
+          try {
+            const res = await fetch('/api/auth/login', {
+              method: 'POST',
+              body: JSON.stringify({ username: username.value, password: password.value }),
+              headers: { 'Content-Type': 'application/json' }
+              })
+              
+            const data = await res.json()
+            if (res.status === 400 || res.status === 401) {
+              return display.textContent = `${data.message}. ${data.error ? data.error : ''}`
+            }
+            data.role === "admin" ? location.assign('/admin') : location.assign('/home')
+            
+          } catch (err) {
+              console.log(err.message)
+            }
+  
+          })
+        </script>
+</body>
+</html>

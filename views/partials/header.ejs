@@ -1,0 +1,59 @@
+<header class="p-3 bg-dark text-white ">
+  <div class="container">
+    <div class="toggle">
+      <ion-icon name="reorder-three-outline"></ion-icon>
+    </div>
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a class="navbar-brand" href="/">  <img src="../../views/im/salle1.jpg" alt="Logo" width="30" height="24"> </a>
+       
+          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 ">
+              <li><a href="/" class="nav-link px-3 text-white mb-2 mx-1 px-1">
+                <span class="icon-container">
+                <ion-icon name="home-outline"></ion-icon>Home</a>
+              </span>
+            </li>
+          
+              <li><a href="#" class="nav-link px-3 text-white mb-2 mx-1 px-1" >
+                <span class="icon-container">
+                <ion-icon name="alert-outline"></ion-icon>About</a>
+              </span></li>
+              <li><a href="/galerie" class="nav-link px-3 text-white mb-2 px-1" mb-2>
+                <span class="icon-container">
+                </span><ion-icon name="images-outline"></ion-icon>Galerie</a>
+              </span></li>
+        
+              <li><a href="#" class="nav-link px-3 text-white mb-10 mx-1 pr-1">
+                <span class="icon-container">
+
+                <ion-icon name="logo-wechat"></ion-icon>conttactez_nous</a></span></li>
+          </ul>
+          <form class="form col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+              <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
+          </form>
+          <div class="textend">
+            <a href="/login" class="btn btn-warning px-5 mx-2">login</a>
+            <a href="/register" class="btn btn-warning px-5 mx-2">register</a>
+          </div>
+      </div>
+  </div>
+  <script>
+    let toggle = document.querySelector(".toggle");
+    let container = document.querySelector(".container");
+    let nav = document.querySelector("ul")
+    let form = document.querySelector("form");
+    let btn = document.querySelector("btn-warning");
+
+    toggle.onclick = function () {
+      container.classList.toggle("active");
+      nav.classList.toggle("active");
+      form.classList.toggle("active");
+      try {
+        btn.classList.toggle("active");
+      } catch (error) { console.log("le");
+        
+      }
+      
+     
+    };
+  </script>
+</header>

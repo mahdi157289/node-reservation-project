@@ -1,0 +1,168 @@
+
+<style>
+  .inputForm {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-left: 10px;
+  }
+
+  .inputForm input {
+    margin-right: 5px;
+    margin-bottom: 5px;
+    padding: 8px;
+    margin: 8px;
+    border-radius: 5px;
+    font-size: 20px;
+    border-color: blue;
+
+  }
+
+  .recentOrders .cardHeader button {
+    position: relative;
+    font-size: 35px;
+    border-color: blue;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    padding: 8px;
+    margin: 8px;
+    border-radius: 5px;
+
+  }
+
+  thead tr td .th {
+    font-size: 30px;
+  }
+</style>
+
+<div class="recentOrders">
+  <div class="cardHeader">
+    <form class="inputForm" @onsubmit="addSalle">
+      <input type="text" name="sallename" placeholder="name" required>
+      <input type="number" name="number" placeholder="number" required>
+      <input type="number" name="capacity" placeholder="capacity" required>
+      <input type="text" name="equipment" placeholder="equipment" required>
+      <input type="number" name="pricebyhour" placeholder="price by hour" required>
+      <button type="submit">
+        <ion-icon name="add-outline"></ion-icon>
+      </button>
+    </form>
+    <form class="inputForm" @onsubmit="deleteSalle">
+      <label for="sallename"></label>
+      <input type="text" id="sallename" name="sallename" placeholder="name" required>
+      <button type="submit">
+        <ion-icon name="trash-outline"></ion-icon>
+      </button>
+    </form>
+  </div>
+  <table>
+    <h2>NOS SALLE</h2>
+    <thead>
+      <tr>
+        <td class="th">
+          NAME
+        </td>
+        <td class="th">
+          NUMBER
+        </td>
+        <td class="th">
+          CAPACITY
+        </td>
+        <td class="th">
+          EQUIPMENT
+        </td>
+        <td class="th">
+          PRICEBYHOUR
+        </td>
+      </tr>
+    </thead>
+
+    <tbody id="salle-list">
+      <!-- Add your salle data here -->
+    </tbody>
+  </table>
+  <script>
+
+const deleteForm = document.querySelector('form.inputForm:nth-child(2)')
+const deleteSallename = document.querySelector('input[name="sallename"][id="sallename"]')
+
+deleteForm.addEventListener('submit', async (e) => {
+  e.preventDefault()
+
+  try {
+    const res = await fetch('/api/auth/deleteSalle', {
+      method: 'DELETE',
+      body: JSON.stringify({ sallename: deleteSallename.value }),
+      headers: { 'Content-Type': 'application/json' }
+    })
+
+    const data = await res.json()
+    if (res.status === 400 || res.status === 401) {
+      return display.textContent = `${data.message}. ${data.error? data.error : ''}`
+    }
+
+    // Clear form field
+    deleteSallename.value = ''
+    location.reload()
+ 
+  } catch (err) {
+    console.log(err.message)
+  }
+})
+
+
+    const form = document.querySelector('form')
+    const sallename = document.querySelector('input[name="sallename"]')
+    const number = document.querySelector('input[name="number"]')
+    const capacity = document.querySelector('input[name="capacity"]')
+    const equipment = document.querySelector('input[name="equipment"]')
+    const pricebyhour = document.querySelector('input[name="pricebyhour"]')
+    const display = document.querySelector('.error')
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+
+      try {
+        const res = await fetch('/api/auth/createSalle', {
+          method: 'POST',
+          body: JSON.stringify({ sallename: sallename.value, number: number.value, capacity: capacity.value, equipment: equipment.value, pricebyhour: pricebyhour.value, }),
+          headers: { 'Content-Type': 'application/json' }
+        })
+
+        const data = await res.json()
+        if (res.status === 400 || res.status === 401) {
+          return display.textContent = `${data.message}. ${data.error ? data.error : ''}`
+        }
+
+        // Clear form fields
+        sallename.value = ''
+        number.value = ''
+        capacity.value = ''
+        equipment.value = ''
+        pricebyhour.value = ''
+      } catch (err) {
+        console.log(err.message)
+      }
+
+    })
+
+    // Fetch list of salles and display them in the table
+    
+    window.fetchSalles().then(data => {
+      const tbody = document.querySelector('#salle-list')
+      tbody.innerHTML = ''
+
+      data.salles.forEach(salle => {
+        const row = document.createElement('tr')
+        row.innerHTML = `
+        <td>${salle.sallename}</td>
+        <td>${salle.number}</td>
+        <td>${salle.capacity}</td>
+        <td>${salle.equipment.join(', ')}</td>
+        <td>${salle.pricebyhour}</td>
+`
+        tbody.appendChild(row)
+      })
+    }).catch(error => {
+      console.error('Error fetching salles:', error);
+    });
+    console.log('Fetching salles...');
+  </script>

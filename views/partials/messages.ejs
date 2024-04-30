@@ -1,0 +1,47 @@
+<STYLE>
+ .th {
+  font-size: 30px;
+ }
+</STYLE>
+<table id="message-list">
+  <thead>
+    <tr>
+      <th  class="th">Nom</th>
+      <th  class="th">Email</th>
+      <th  class="th">Message</th>
+    </tr>
+  </thead>
+ 
+  <tbody>
+  </tbody>
+</table>
+
+<script>
+async function fetchMessages() {
+  console.log('Fetching messages...');
+  const res = await fetch('/api/auth/message')
+  console.log('Response received:', res);
+  const data = await res.json()
+  console.log('Data received:', data);
+  
+  if (res.ok) {
+    const tbody = document.querySelector('#message-list tbody')
+    tbody.innerHTML = ''
+  
+    data.forEach(message => {
+      const row = document.createElement('tr')
+      row.innerHTML = `
+        <td>${message.name}</td>
+        <td>${message.email}</td>
+        <td>${message.message}</td>
+  `
+      tbody.appendChild(row)
+    })
+  } else {
+    console.log('Error:', data.message);
+  }
+}
+
+fetchMessages();
+console.log('Fetching messages...');
+</script>

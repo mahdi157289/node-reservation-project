@@ -1,0 +1,122 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+<head> <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script></head>
+<body>
+    <main>
+        <div class="acceuil">
+            <div class="container">
+                <h1 class="center-align bl-text mb-20" style="color: rgb(8, 0, 0);">Welcome to our Event Hall Booking Site</h1>
+                <p style="color: rgb(14, 1, 1);"> Find your perfect venue in just a few clicks. </p>
+                
+                <div class="row">
+                  <div class="col-sm-4"><%- include('../partials/needcard', { icon: '<ion-icon name="infinite-outline"></ion-icon>', title: 'the space needed' }) %></div>
+                  <div class="col-sm-4"><%- include('../partials/needcard', { icon: '<ion-icon name="hammer-outline"></ion-icon>', title: 'the material needed ' }) %></div>
+                  <div class="col-sm-4"><%- include('../partials/needcard', { icon: '<ion-icon name="cash-outline"></ion-icon>', title: 'the best offer' }) %></div>
+                </div>
+                
+            </div>
+            <a href="/reserver" class="btn btn-warning px-5  mx-auto">B <br>O<br>O<br>K<br><br> A <br><br>H<br>A<br>L<br>L<br><ion-icon name="shuffle-outline"></ion-icon></a>
+            
+        </div>
+        <div class="Galerie">
+          <label>notre Galerie</label>
+          <div class="containerG">
+            <div class="scroll-container">
+              
+              
+            </div>
+          </div>
+        </div>
+        
+            <div class="about_us">
+                <label >about us </label>
+                <div class="row">
+                <div class="col-sm"> 
+                   <h2 class="section_header">-- Who We Are --</h2>
+                          <p class="section_text">
+                            Welcome to Salle Reservation, your one-stop-shop for booking the perfect venue for your next event.
+                            We are a team of passionate event planners who have come together to create a platform that makes
+                            the process of finding and reserving the perfect venue simple and straightforward.
+                          </p>
+                  </div>
+                   <div class="col-sm">
+                   <h2 class="section_header">-- Our Mission --</h2>
+                          <p class="section_text">
+                            Our mission is to make it easy for anyone to find and reserve the perfect venue for any occasion.
+                            We believe that everyone deserves to have a memorable event, and that starts with finding the
+                            right space.
+                          </p>
+                          <br><br><br>
+                          <a href="/reserver" class="button">Reserve a Salle Now</a>
+                  </div>
+                 <div class="col-sm"> 
+                   <h2 class="section_header">-- Our Vision --</h2>
+                          <p class="section_text">
+                            Our vision is to become the go-to platform for venue booking worldwide. We want to make it easy for
+                            people to find and book the perfect venue, no matter where they are or what they are celebrating.
+                          </p>
+                  </div>
+                </div>
+                <div>
+                    <header class="page-header">
+                          <h1>Contactez-nous</h1>
+                          <p>N'hésitez pas à nous contacter pour toute information ou demande</p>
+                        </header>
+                        <div class="contact">
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="contact-form">
+                                <h3>Laissez-nous un message</h3>
+                                <form>
+                                  <input type="text" id="name" name="name" placeholder="Votre nom" required />
+                                  <input type="email" id="email" name="email" placeholder="Votre email" required />
+                                  <textarea name="message" id="message" placeholder="Votre message" required></textarea>
+                                  <input type="submit" value="Envoyer" />
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                    </div>
+                        </div>
+              </div>
+              <script>
+                const name = document.querySelector('#name');
+                const email = document.querySelector('#email');
+                const message = document.querySelector('#message');
+                const display = document.querySelector('.error');
+                
+                const contactForm = document.querySelector('form');
+                
+                contactForm.addEventListener('submit', async (e) => {
+                  e.preventDefault();
+                  display.textContent = '';
+                
+                  try {
+                    console.log('Form submitted');
+                    const res = await fetch('/api/auth/messages', {
+                      method: 'POST',
+                      body: JSON.stringify({
+                        name: name.value,
+                        email: email.value,
+                        message: message.value,
+                      }),
+                      headers: { 'Content-Type': 'application/json' },
+                    });
+                
+                    console.log('Request sent');
+                    const data = await res.json();
+                
+                    if (res.status === 400 || res.status === 401) {
+                      return display.textContent = `${data.message}. ${data.error ? data.error : ''}`;
+                    }
+                
+                    console.log('Response received');
+                    console.log(data);
+                  } catch (err) {
+                    console.log('Error in API request:', err.message);
+                  }
+                });
+                </script>
+</body>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Page</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="my-4">Users</h1>
+      <ul class="list-group">
+        <script>
+          const ul = document.querySelector("ul.list-group")
+          const getUsers = async () => {
+            const res = await fetch("/api/auth/getUsers")
+            const data = await res.json()
+            data.user.map((mappedUser) => {
+              if (mappedUser.username !== "admin") {
+                const li = document.createElement("li")
+                li.className = "list-group-item"
+                const p1 = document.createElement("p")
+                const p2 = document.createElement("p")
+
+                p1.textContent = `Username: ${mappedUser.username}`
+                p2.textContent = `Role: ${mappedUser.role}`
+
+                li.appendChild(p1)
+                li.appendChild(p2)
+
+                ul.appendChild(li)
+              }
+            })
+          }
+          getUsers()
+        </script>
+      </ul>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+      integrity="sha384-eMNCOe7tC1doHpGoJtKh7z7lGz7fuP4F8nfdFvAOA6Gg/z6Y5J6XqqyGXYM2ntX5"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"
+      integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
